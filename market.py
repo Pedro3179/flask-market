@@ -1,8 +1,20 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 
-app = Flask(__name__)
-#print(type(app))
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///market.db'
+db= SQLAlchemy(app)
+
+class Item(db.Model):
+    id=db.Column(db.Integer(), primary_key=True)
+    name=db.Column(db.String(length=30), nullable=False, unique=True)
+    price=db.Column(db.Integer(), nullable=False)
+    barcode=db.Column(db.String(length=11), nullable=False, unique=True)
+    description=db.Column(db.String(length=1024), nullable=False, unique=True)
+
+    def __repr__(self):
+        return f'Item {self.name}'
 
 @app.route('/')
 @app.route('/home')
@@ -11,10 +23,5 @@ def home_page():
 
 @app.route('/market')
 def market_page():
-    items=[
-        {'id':1, 'name':'RK Royal Kludge R75', 'barcode': '45378905678', 'price': 450},
-        {'id':2, 'name':'Masterkeys PRO M', 'barcode': '23568790653', 'price': 467},
-        {'id':3, 'name':'exbom BK152-C', 'barcode': '42696531729', 'price': 100},
-        {'id':4, 'name':'Mancer Shade MK2', 'barcode': '52123531729', 'price': 120}
-        ]
+    items=Item.query.all()
     return render_template('market.html', items=items)
