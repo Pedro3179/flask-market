@@ -1,0 +1,13 @@
+from market import app  #<-- when we access the package it auto run __init__, tha's why we don't need to write market.__init__
+from flask import render_template
+from market.models import item
+
+@app.route('/')
+@app.route('/home')
+def home_page():
+    return render_template('home.html')
+
+@app.route('/market')
+def market_page():
+    items=item.query.all()
+    return render_template('market.html', items=items)
