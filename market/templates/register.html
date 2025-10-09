@@ -1,0 +1,29 @@
+{%extends 'base.html'%}
+
+{%block name%}
+  Register| E-commerce
+{%endblock%}
+
+{%block body%}
+  <div class="container">
+  <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Napster_logo.svg" width="180" alt="A logo">
+  <h1 class="h3 mb-3 font-weight-normal"> Create your Account</h1>
+    <form method="POST" class="form-register">
+
+      {{ forms.username.label() }}
+      {{ forms.username(class="form-control", placeholder="User Name") }}
+      
+      {{ forms.email_address.label() }}
+      {{ forms.email_address(class="form-control", placeholder="Email") }}
+      
+      {{ forms.password1.label() }}
+      {{ forms.password1(class="form-control", placeholder="Choose your password") }}
+      
+      {{ forms.password2.label() }}
+      {{ forms.password2(class="form-control", placeholder="Confirm your password") }}
+      <br>
+      {{ forms.submit(class="btn btn-lg btn-primary") }}
+    
+    </form>
+  </div>
+  {%endblock%}

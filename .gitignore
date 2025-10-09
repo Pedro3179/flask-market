@@ -1,2 +1,4 @@
 *.sqlite
 *.db
+*.sqbpro
+*.env
