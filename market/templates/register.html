@@ -9,7 +9,7 @@
   <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Napster_logo.svg" width="180" alt="A logo">
   <h1 class="h3 mb-3 font-weight-normal"> Create your Account</h1>
     <form method="POST" class="form-register">
-
+      {{ forms.hidden_tag() }}
       {{ forms.username.label() }}
       {{ forms.username(class="form-control", placeholder="User Name") }}
       
