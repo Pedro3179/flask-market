@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+
+{%block name%}
+  Login | E-commerce
+{%endblock%}
+
+{%block body%}
+  <div class="container">
+    <form method="POST" class="form-signin">
+        {{ form.hidden_tag() }}
+        <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Napster_logo.svg" width="180" alt="A logo">
+        <h1 class="h3 mb-3 font-weight-normal">
+            Please Login
+        </h1>
+        <br>
+        {{ form.email_address.label() }}
+        {{ form.email_address(class="form-control", placeholder="Email") }}
+
+        {{ form.password1.label() }}
+        {{ form.password1(class="form-control", placeholder="Password") }}
+
+        <br>
+
+        <div class="checkbox mb-3">
+          <p>Do not have an account?<p>
+          <a class="btn btn-sm btn-secondary" href="{{ url_for('register_page') }}">Register</a>
+        </div>
+
+        {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+    </form>
+  </div>  
+{%endblock%}
