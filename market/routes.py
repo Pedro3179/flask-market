@@ -1,7 +1,7 @@
 from market import app, db  #<-- when we access the package it auto run __init__, tha's why we don't need to write market.__init__
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, request
 from market.models import Item, User
-from market.forms import RegisterForm, LoginForm
+from market.forms import RegisterForm, LoginForm, PurchaseItemForm
 from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
@@ -9,11 +9,15 @@ from flask_login import login_user, logout_user, login_required
 def home_page():
     return render_template('home.html')
 
-@app.route('/market')
+@app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
     items=Item.query.all()
-    return render_template('market.html', items=items)
+    purchase_form=PurchaseItemForm()
+    if purchase_form.validate_on_submit():
+        print(request.form.get('purchased_item'))
+
+    return render_template('market.html', items=items, purchase_form=purchase_form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():

@@ -5,10 +5,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">
+        <h4 class="modal-title" id="ModalLabel">
           <!-- -->
           {{ i.name }}
-        </h5>
+        </h4>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -34,22 +34,25 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">
+        <h4 class="modal-title" id="ModalLabel">
           <!-- -->
           {{ i.name }}
-        </h5>
+        </h4>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        Are you sure you want to purchase this item?
+        <h5>Are you sure you want to purchase this item?</h5>
+        <p>By clicking Confirm, <strong>you will purchase this item.</strong></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-dismiss="modal">Confirm
-        </button>
+        <form method="POST">
+          {{ purchase_form.hidden_tag() }}
+          <input id="purchased_item" type="hidden" name="purchased_item" value="{{i.name}}">
+          {{ purchase_form.submit(class="btn btn-outline-success btn-block") }}
+        </form>
         <button type="button" class="btn btn-secondary"
                 data-dismiss="modal">Close
         </button>

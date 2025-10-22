@@ -27,4 +27,8 @@ class LoginForm(FlaskForm):
     password1=PasswordField(label='Password', validators=[DataRequired()])
     submit=SubmitField(label='Sign in')
 
+class PurchaseItemForm(FlaskForm):              # Button to confirm item purchase.
+    submit=SubmitField(label='Confirm')
+class SellItemForm(FlaskForm):
+    submit=SubmitField(label='Confirm')  # Button to confirm item selling.
     

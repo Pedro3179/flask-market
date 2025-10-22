@@ -19,7 +19,7 @@ Market | E-commerce
       </thead>
       <tbody>
         {% for i in items %}
-        {% include 'includes/items_modals.html' %}
+        {% include 'includes/items_modals.html' %} <!-- This line makes all the variables that where sent to this page via routes available to items_modals.html -->
         <tr>
           <td>{{i.id}}</td>
           <td>{{i.name}}</td>
