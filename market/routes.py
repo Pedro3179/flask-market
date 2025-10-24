@@ -2,7 +2,7 @@ from market import app, db  #<-- when we access the package it auto run __init__
 from flask import render_template, url_for, redirect, flash, request
 from market.models import Item, User
 from market.forms import RegisterForm, LoginForm, PurchaseItemForm
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route('/')
 @app.route('/home')
@@ -12,24 +12,46 @@ def home_page():
 @app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
-    items=Item.query.all()
     purchase_form=PurchaseItemForm()
-    if purchase_form.validate_on_submit():
-        print(request.form.get('purchased_item'))
-
-    return render_template('market.html', items=items, purchase_form=purchase_form)
+    if request.method=="POST":                              # Using this instead of the validate_on_submit in order to avoid trying to validate the GET request (fixes error when refreshing a page after submiting a form)
+        purchased_item=request.form.get('purchased_item')   # Get the value from the input type=hidden, which is the name of the bought product.
+        p_item_object=Item.query.filter_by(name=purchased_item).first()
+        if p_item_object is not None:
+        
+        # Method of the models.py class User, which returns a bolean if the argument.price is lower than User budget
+            if current_user.can_purchase(p_item_object):
+                p_item_object.buy(current_user)
+                flash(f'Thank you for buying at Keyboard Market! '
+                    f'You acquired {p_item_object.name}.',
+                    category='success'
+                )
+            else:
+                flash(f'You do not have enough funds to buy {p_item_object.name}.',
+                    category='danger'
+                )
+            return redirect(url_for('market_page'))
+    
+    if request.method=="GET":
+        items=Item.query.filter_by(user_id=None)
+        return render_template('market.html', items=items, purchase_form=purchase_form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
     forms=RegisterForm()
     if forms.validate_on_submit():
-        user_to_create=User(username=forms.username.data,
-                            email_address=forms.email_address.data,
-                            password=forms.password1.data)
+        user_to_create=User(
+            username=forms.username.data,
+            email_address=forms.email_address.data,
+            password=forms.password1.data
+        )
         db.session.add(user_to_create)
         db.session.commit()
         login_user(user_to_create)
-        flash(f'Account created successfully! Welcome, {user_to_create.username}.', category='success')
+        flash(
+            f'Account created successfully! Welcome,'
+            f' {user_to_create.username}.',
+            category='success'
+        )
         return redirect(url_for('market_page'))
     if forms.errors != {}: # Print the error messages on the server side.
         for error in forms.errors.values():

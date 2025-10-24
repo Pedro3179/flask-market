@@ -8,7 +8,9 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id=db.Column(db.Integer(), primary_key=True)
     username=db.Column(db.String(length=30), nullable=False, unique=True)
-    email_address=db.Column(db.String(length=50), nullable=False, unique=True)
+    email_address=db.Column(
+        db.String(length=50), nullable=False, unique=True
+    )
     password_hash=db.Column(db.String(length=60), nullable=False)
     budget=db.Column(db.Integer(), default=1000)
     item=db.relationship('Item', backref='owned_user', lazy=True)
@@ -30,6 +32,11 @@ class User(db.Model, UserMixin):
     
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password) # This will return True or False
+    
+#returns a bolean if the argument.price is lower than User budget
+    def can_purchase(self, item_object):
+        return self.budget>=item_object.price
+    
 
 class Item(db.Model):
     id=db.Column(db.Integer(), primary_key=True)
@@ -40,3 +47,8 @@ class Item(db.Model):
     user_id=db.Column(db.Integer(), db.ForeignKey('user.id'))
     def __repr__(self):
         return f'item {self.name}'
+    
+    def buy(self, user):
+        self.user_id=user.id
+        user.budget-=self.price
+        db.session.commit()
